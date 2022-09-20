@@ -23,7 +23,7 @@ const Login = () => {
   }, []);
 
   async function ConnectWallet() {
-    if (!isMetamaskAvailable) {
+    if (isMetamaskAvailable) {
       var provider = new ethers.providers.Web3Provider(window.ethereum)
       var accounts = await provider.send('eth_requestAccount',[])
     }
