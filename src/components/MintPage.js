@@ -1,8 +1,8 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { AppContext } from "../App";
 import logo from "../assets/images/icon.png";
 import gif from '../assets/images/nfts.gif'
-import { useContractRead, useContractWrite, usePublicClient } from "wagmi";
+import { useAccount, useContractRead, useContractWrite, useNetwork } from "wagmi";
 import { createPublicClient, formatEther, http, parseEther } from "viem";
 import { Spinner } from "@chakra-ui/react";
 import bnb from '../assets/images/bnb.svg'
@@ -10,14 +10,27 @@ import { bscTestnet } from 'wagmi/chains'
 const MintPage = () => {
 
   const { contract } = useContext(AppContext);
+  const network = useNetwork()
+  const [incorrectChain,setIncorrectChain] = useState(false)
+
 
   const [showNFTs, setShowNFTs] = useState(false)
   const [mintAmount, setMintAmount] = useState(1);
   const [mintedNFTs, setMintedNFTs] = useState([])
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [message, setMessage] = useState("")
   const url = 'https://santafloki.mypinata.cloud/ipfs'
   const cid = '/QmYTZJgpMdbHuGJbAxSTwnwHbaMr98gU4RNqUdxbH6NnAW/'
+
+  useEffect(()=>{
+    if(network.chain.id!==97){
+      setIncorrectChain(true)
+    }
+    else{
+      setIncorrectChain(false)
+    }
+    setLoading(false)
+  },[network])
 
   const publicClient = createPublicClient({ 
     chain: bscTestnet,
@@ -99,7 +112,6 @@ const MintPage = () => {
     setShowNFTs(false);
     setMintedNFTs([]);
   }
-
   return (
     <>
       <div className="Container">
@@ -117,6 +129,9 @@ const MintPage = () => {
               }
             </div>
               :
+              <>
+              {incorrectChain?
+              <h3>Incorrect Chain Switch to bscTestnet</h3>:
               <>
                 {!showNFTs ?
                   <>
@@ -174,6 +189,8 @@ const MintPage = () => {
 
                 }
               </>
+            }
+            </>
             }
           </>
           <h4 style={{ position: 'absolute', top: '38px', right: '30px' }}>V2 Minting</h4>

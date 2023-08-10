@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useMemo } from "react";
 import logo from "../assets/images/icon.png";
-import { useConnect, useContractReads } from "wagmi";
+import { useAccount, useConnect, useContractReads } from "wagmi";
 import contractAbi from '../assets/abi.json'
 import { AppContext } from "../App";
 import { Spinner } from "@chakra-ui/react";
@@ -16,7 +16,6 @@ const Login = () => {
   const [soldout, setSoldout] = useState(false)
 
   const { contract } = useContext(AppContext)
-
   
   const {connect,isLoading} = useConnect({chainId:97,connector:new InjectedConnector()})
 
