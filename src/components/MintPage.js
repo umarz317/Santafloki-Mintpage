@@ -41,11 +41,10 @@ const MintPage = () => {
     functionName: 'totalSupply'
   })
 
-  const { data } = useContractRead({
+  const { data,isSuccess } = useContractRead({
     ...contract,
     functionName: 'basePrice'
   })
-  
 
   const { writeAsync } = useContractWrite({
     ...contract,
@@ -128,7 +127,7 @@ const MintPage = () => {
                       </div>
                     </div>
                     <div className="mintBtnDiv">
-                      <div style={{display:'flex',position:'absolute',right:'-60px'}}><h6>{"Price: "+mintAmount*(parseFloat(formatEther(data)))}</h6><img style={{marginLeft:'8px'}} width={20} src={bnb}/></div>
+                      <div style={{display:'flex',position:'absolute',right:'-60px'}}><h6>{"Price: "+isSuccess&&data!==undefined?mintAmount*parseFloat(formatEther(data)):'...'}</h6><img style={{marginLeft:'8px'}} width={20} src={bnb}/></div>
                       <div style={{width:'100%',display:'flex',justifyContent:'space-around'}}>
                         <button className="mintBtn"
                           onClick={() => {
