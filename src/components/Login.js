@@ -28,7 +28,8 @@ const Login = () => {
   useMemo(() => {
     if (isSuccess) {
       setLoading(false)
-      setTotalMinted(data[0].result.toString())
+      console.log(data[0].result)
+      setTotalMinted(data[0].result?.toString())
     }
   }
     , [isSuccess])
