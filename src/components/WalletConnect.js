@@ -1,25 +1,17 @@
-import React, { useState, useEffect, useContext, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import logo from "../assets/images/icon.png";
-import { useAccount, useConnect, useContractReads } from "wagmi";
-import contractAbi from '../assets/abi.json'
-import { AppContext } from "../App";
+import { useReadContracts } from "wagmi";
 import { Spinner } from "@chakra-ui/react";
+import { useWeb3Modal } from "@web3modal/wagmi/react";
+import {contract} from '../utils/constants'
 
-import { InjectedConnector } from 'wagmi/connectors/injected'
-import { useWeb3Modal } from "@web3modal/react";
-
-
-const Login = () => {
+const WalletConnect = () => {
   const {open} = useWeb3Modal()
   const [totalMinted, setTotalMinted] = useState()
   const [loading, setLoading] = useState(true)
   const [soldout, setSoldout] = useState(false)
 
-  const { contract } = useContext(AppContext)
-  
-  const {connect,isLoading} = useConnect({chainId:97,connector:new InjectedConnector()})
-
-  const { data, isSuccess } = useContractReads({
+  const { data, isSuccess } = useReadContracts({
     contracts: [
       { ...contract, functionName: 'totalSupply' },
     ]
@@ -41,13 +33,7 @@ const Login = () => {
   }, []);
 
   async function ConnectWallet() {
-      if(window.ethereum){
-          connect()
-      }
-      else{
-        open()
-      }
-
+      open()
   }
 
 
@@ -84,4 +70,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default WalletConnect;

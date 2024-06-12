@@ -1,38 +1,24 @@
-import React, { useState, useEffect, createContext } from "react";
+import React from "react";
 import "./App.css";
-import Login from "./components/Login";
+import WalletConnect from "./components/WalletConnect";
 import MintPage from "./components/MintPage";
 import { useAccount } from "wagmi";
-import contractAbi from './assets/abi.json'
-export const AppContext = createContext();
 
 function App() {
-
-  const { isConnected } = useAccount()
-
-  const contractAddress = "0xCfcCbdCd09b4d6717A262451F3A8a3B4444c1e53"
-  const contract = { address: contractAddress, abi: contractAbi }
+  const { isConnected } = useAccount();
 
   return (
-    <AppContext.Provider
-      value={{ contract: contract }}
-    >
-      <>
-        <div className="App">
-
-          {isConnected ?
-            <div>
-              <MintPage />
-            </div>
-            :
-            <div>
-              <Login />
-            </div>
-          }
-
+    <div className="App">
+      {isConnected ? (
+        <div>
+          <MintPage />
         </div>
-      </>
-    </AppContext.Provider>
+      ) : (
+        <div>
+          <WalletConnect />
+        </div>
+      )}
+    </div>
   );
 }
 

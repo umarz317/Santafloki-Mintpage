@@ -1,18 +1,18 @@
-import React, { useState, useContext, useEffect } from "react";
-import { AppContext } from "../App";
+import React, { useState, useEffect } from "react";
 import logo from "../assets/images/icon.png";
 import gif from '../assets/images/nfts.gif'
-import { useAccount, useContractRead, useContractWrite, useNetwork } from "wagmi";
-import { createPublicClient, formatEther, http, parseEther } from "viem";
+import { useReadContract, useWriteContract } from "wagmi";
+import { createPublicClient, formatEther, http } from "viem";
 import { Spinner } from "@chakra-ui/react";
 import bnb from '../assets/images/bnb.svg'
 import { bscTestnet } from 'wagmi/chains'
+import {contract} from '../utils/constants'
+import { useWeb3ModalState } from "@web3modal/wagmi/react";
+
 const MintPage = () => {
 
-  const { contract } = useContext(AppContext);
-  const network = useNetwork()
+  const {selectedNetworkId} = useWeb3ModalState()
   const [incorrectChain,setIncorrectChain] = useState(false)
-
 
   const [showNFTs, setShowNFTs] = useState(false)
   const [mintAmount, setMintAmount] = useState(1);
@@ -23,14 +23,16 @@ const MintPage = () => {
   const cid = '/QmYTZJgpMdbHuGJbAxSTwnwHbaMr98gU4RNqUdxbH6NnAW/'
 
   useEffect(()=>{
-    if(network.chain.id!==97){
+    console.log(selectedNetworkId)
+    if(selectedNetworkId!==97){
+      console.log('incorrect chain')
       setIncorrectChain(true)
     }
     else{
       setIncorrectChain(false)
     }
     setLoading(false)
-  },[network])
+  },[selectedNetworkId])
 
   const publicClient = createPublicClient({ 
     chain: bscTestnet,
@@ -49,20 +51,17 @@ const MintPage = () => {
     setLoading(false);
   }
 
-  const { refetch: fetchSupply } = useContractRead({
+  const { refetch: fetchSupply } = useReadContract({
     ...contract,
     functionName: 'totalSupply'
   })
 
-  const { data,isSuccess } = useContractRead({
+  const { data,isSuccess } = useReadContract({
     ...contract,
     functionName: 'basePrice'
   })
 
-  const { writeAsync } = useContractWrite({
-    ...contract,
-    functionName: 'mintBatch'
-  })
+  const { writeContractAsync } = useWriteContract()
 
   async function getMintedID() {
     try {
@@ -78,9 +77,10 @@ const MintPage = () => {
     let value = (parseInt(data.toString())*mintAmount).toString()
     console.log(value)
     var mintedID = await getMintedID()
-
+    console.log(mintedID,mintAmount,value)
+    console.log(contract)
     try {
-      const txHash = await writeAsync({ args: [mintAmount],value: value});
+      const txHash = await writeContractAsync({ ...contract, args: [mintAmount],value: value, functionName: 'mintBatch'});
       const tx = await publicClient.waitForTransactionReceipt(txHash)
       if (tx.status === 'success') {
         setMessage("Minted! Loading NFTs...")

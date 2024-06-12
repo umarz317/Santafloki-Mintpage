@@ -12,7 +12,7 @@ contract NFT is ERC721Enumerable,Ownable{
     //Max Supply
     uint maxSupply = 500;
     //URL
-    string baseURI = "https://santafloki.mypinata.cloud/ipfs/QmTwyNGPrUxaGEty3n6z2N3YKumATi2m3DoJvGoZsNrR7u/";
+    string baseURI = "https://ipfs.io/ipfs/QmTwyNGPrUxaGEty3n6z2N3YKumATi2m3DoJvGoZsNrR7u/";
     
     constructor() ERC721("SantaFloki V2 NFT","SFV2"){
 
