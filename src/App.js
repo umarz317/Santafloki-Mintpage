@@ -8,7 +8,7 @@ function App() {
   const { isConnected } = useAccount();
 
   return (
-    <div className="App">
+    <div className="font-['myfont'] w-full min-h-screen flex items-center justify-center">
       {isConnected ? (
         <div>
           <MintPage />
