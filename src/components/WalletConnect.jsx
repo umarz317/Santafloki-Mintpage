@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import logo from "../assets/images/icon.png";
 import { useReadContracts } from "wagmi";
-import { Spinner } from "@chakra-ui/react";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { contract } from "../utils/constants";
+import LoadingSpinner from "./Spinner";
 
 const WalletConnect = () => {
   const { open } = useWeb3Modal();
@@ -15,17 +15,12 @@ const WalletConnect = () => {
     contracts: [{ ...contract, functionName: "totalSupply" }],
   });
 
-  useMemo(() => {
-    if (isSuccess) {
+  useEffect(() => {
+    if (isSuccess===true) {
       setLoading(false);
-      console.log(data[0].result);
       setTotalMinted(data[0].result?.toString());
     }
-  }, [isSuccess]);
-
-  console.log(data);
-
-  useEffect(() => {}, []);
+  }, [data,isSuccess]);
 
   async function ConnectWallet() {
     open();
@@ -34,7 +29,7 @@ const WalletConnect = () => {
   return (
     <div className="bg-black bg-opacity-40 text-white rounded-3xl relative w-[400px] h-[500px] flex items-center justify-center">
       <div className="flex items-center absolute justify-center top-0 w-full bg-[#360202] rounded-t-3xl">
-        <img width={60} height={60} src={logo} />
+        <img width={60} height={60} src={logo} alt="logo" />
         <h1>SantaFloki</h1>
         <h4 className="absolute top-[38px] right-[30px]">V2 Minting</h4>
       </div>
@@ -57,7 +52,7 @@ const WalletConnect = () => {
         </>
       ) : (
         <>
-          <Spinner />
+          <LoadingSpinner />
         </>
       )}
     </div>

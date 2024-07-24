@@ -1,5 +1,4 @@
 import React from "react";
-import "./App.css";
 import WalletConnect from "./components/WalletConnect";
 import MintPage from "./components/MintPage";
 import { useAccount } from "wagmi";

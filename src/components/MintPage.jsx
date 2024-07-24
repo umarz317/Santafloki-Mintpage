@@ -3,11 +3,11 @@ import logo from "../assets/images/icon.png";
 import gif from "../assets/images/nfts.gif";
 import { useReadContract, useWriteContract } from "wagmi";
 import { createPublicClient, formatEther, http } from "viem";
-import { Spinner } from "@chakra-ui/react";
 import bnb from "../assets/images/bnb.svg";
 import { bscTestnet } from "wagmi/chains";
 import { contract } from "../utils/constants";
 import { useWeb3ModalState } from "@web3modal/wagmi/react";
+import LoadingSpinner from "./Spinner";
 
 const MintPage = () => {
   const { selectedNetworkId } = useWeb3ModalState();
@@ -84,14 +84,13 @@ const MintPage = () => {
         value: value,
         functionName: "mintBatch",
       });
-      const tx = await publicClient.waitForTransactionReceipt({hash: txHash});
+      const tx = await publicClient.waitForTransactionReceipt({ hash: txHash });
       if (tx.status === "success") {
         setMessage("Minted! Loading NFTs...");
         getMintedNFTsImage(mintedID, mintAmount);
       }
     } catch (err) {
-      err = err.toString();
-      console.log(err);
+      console.log(err.toString());
       if (err.includes("rejected")) {
         setMessage("User rejected the transaction!");
       } else if (err.includes("balance")) {
@@ -117,13 +116,15 @@ const MintPage = () => {
     <>
       <div className="bg-black bg-opacity-40 text-white rounded-3xl relative w-[400px] h-[500px] flex items-center justify-center">
         <div className="flex items-center absolute justify-center top-0 w-full bg-[#360202] rounded-t-3xl">
-          <img width={60} height={60} src={logo} />
+          <img width={60} height={60} src={logo} alt="logo" />
           <h1>SantaFloki</h1>
           <h4 className="absolute top-[38px] right-[30px]">V2 Minting</h4>
         </div>
         <>
           {loading ? (
-            <div>{message === "" ? <Spinner /> : <h1>{message}</h1>}</div>
+            <div>
+              {message === "" ? <LoadingSpinner /> : <h1>{message}</h1>}
+            </div>
           ) : (
             <>
               {incorrectChain ? (
@@ -136,6 +137,7 @@ const MintPage = () => {
                         <img
                           className="absolute w-[180px] h-[220px] rounded-[20px] filter brightness-30"
                           src={gif}
+                          alt="gif"
                         />
                         <div className="w-full h-full flex items-center justify-center">
                           <h1 style={{ zIndex: 100 }}>?</h1>
@@ -149,34 +151,37 @@ const MintPage = () => {
                                 ? mintAmount * parseFloat(formatEther(data))
                                 : "...")}
                           </h6>
-                          <img className="ml-2" width={20} src={bnb} />
+                          <img
+                            className="ml-2"
+                            width={20}
+                            src={bnb}
+                            alt="bnb"
+                          />
                         </div>
                         <div className="flex justify-around w-full">
                           <button
                             className="py-2 px-2 rounded-2xl bg-blue-600"
                             onClick={() => {
-                              {
-                                mintAmount > 1 ? (
-                                  setMintAmount(mintAmount - 1)
-                                ) : (
-                                  <></>
-                                );
-                              }
+                              mintAmount > 1 ? (
+                                setMintAmount(mintAmount - 1)
+                              ) : (
+                                <></>
+                              );
                             }}
                           >
                             -
                           </button>
-                          <button className="py-2 px-2 rounded-2xl bg-blue-600">{mintAmount}</button>
+                          <button className="py-2 px-2 rounded-2xl bg-blue-600">
+                            {mintAmount}
+                          </button>
                           <button
                             className="py-2 px-2 rounded-2xl bg-blue-500"
                             onClick={() => {
-                              {
-                                mintAmount < 4 ? (
-                                  setMintAmount(mintAmount + 1)
-                                ) : (
-                                  <></>
-                                );
-                              }
+                              mintAmount < 4 ? (
+                                setMintAmount(mintAmount + 1)
+                              ) : (
+                                <></>
+                              );
                             }}
                           >
                             +
@@ -199,8 +204,9 @@ const MintPage = () => {
                         {mintedNFTs.map((element) => {
                           return (
                             <img
-                              className="w-[120px] p-2.5 rounded-[20px]"
+                              className={`w-[120px] h-[143px] p-2.5 rounded-[20px]`}
                               src={url + cid + element + ".png"}
+                              alt="NFT"
                             />
                           );
                         })}

@@ -1,3 +1,4 @@
+import "./App.css";
 import { createWeb3Modal } from "@web3modal/wagmi/react";
 import { defaultWagmiConfig } from "@web3modal/wagmi/react/config";
 import React from "react";
@@ -6,7 +7,6 @@ import App from './App';
 import { WagmiProvider } from "wagmi";
 import { bscTestnet } from "wagmi/chains";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ChakraProvider } from "@chakra-ui/react";
 
 const queryClient = new QueryClient();
 
@@ -37,11 +37,9 @@ createWeb3Modal({
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <ChakraProvider>
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <App />
       </QueryClientProvider>
     </WagmiProvider>
-  </ChakraProvider>
 );
