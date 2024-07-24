@@ -1,3 +1,3 @@
 # Santafloki Minting Page.
 
-- Upadated to use wagmi + web3modal
+- Updated to use wagmi + web3modal + tailwindcss
